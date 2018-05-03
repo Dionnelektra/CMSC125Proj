@@ -1,0 +1,22 @@
+0hh1 by Q42 for ICS-OS
+-----------------------------------------------
+
+1. Extract from within ics-os source directory
+
+   $tar xzvf 0hh1.tar.gz
+   $cd contrib/0hh1
+   $make
+   $make install
+
+2. Perform the steps to install ics-os
+   $cd ../..
+   $sudo make install 
+
+3. Run 0hh1.exe inside ics-os
+
+------------------------------------------------
+
+Enjoy???
+
+Liwag, Jay Vince B.
+Palmero, Erica Faye D.

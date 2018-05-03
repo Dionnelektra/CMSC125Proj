@@ -1,0 +1,327 @@
+#include "../../sdk/dexsdk.h"
+
+int board[4][4];
+int newBoard[4][4];
+int score=0, k=0, score2=0;
+char scores[4];
+
+int main() 
+{
+	printf("2048");
+	set_graphics(VGA_320X200X256);
+	char keypress;
+
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			board[i][j] = 0;
+			newBoard[i][k] = 0;
+		}
+	}
+	
+	FILE *file = openfile("highscore.txt", 1); 
+	fread(scores, 1, 1, file);
+	fputc(scores, file);
+	closefile(file);
+	
+	do{
+		
+		showHome();
+	
+		if(keypress=(char)getch()){
+			if(keypress=='1'){
+				erase(1,1,400,220);
+			
+				drawBoard();
+				randomizer();
+	
+				write_text("2048", 10, 150, WHITE, 0);
+				write_text("Score: ", 10, 160, WHITE, 0); 
+				write_text("Up(W)  Down(D)  Left(A)  Right(D)", 10, 170, WHITE, 0);
+				write_text("High score: ", 10, 180, WHITE, 0);
+				write_text("New Game(N)  Exit(X)", 10, 190, WHITE, 0);
+				print_number(scores, WHITE);
+				//write_text("Score: ", 10, 220, WHITE, 0);
+
+
+				do{
+					//showScore();
+					if (keypress=(char)getch()){
+		
+						if(keypress=='w' || keypress=='W'){
+							up();
+						}
+						else if(keypress=='s' || keypress=='S'){
+							down();
+						}
+						else if(keypress=='d' || keypress=='D'){
+							right();
+						}
+						else if(keypress=='a' || keypress=='A'){
+							left();
+						}
+						else if(keypress=='x' || keypress=='X'){
+							erase(0,0,400,220);
+							break;
+						}
+						else if(keypress=='n' || keypress=='N'){
+							for(int i=0; i<4; i++){
+								for(int j=0; j<4; j++){
+									board[i][j] = 0;
+								}
+							}
+							drawBoard();
+							drawVals();
+							randomizer();
+						}
+					}
+				}while(1);
+			}
+		}
+	}while(1);
+
+	return 0;
+	
+}
+
+void down(){
+	for(int i=0; i<4; i++){
+		for(int j=0; j<3; j++){
+			if(board[i][j+1] == 0){
+				board[i][j+1] = board[i][j];
+				board[i][j] = 0;
+			}
+			else if(board[i][j] == board[i][j+1]){
+				board[i][j+1] = board[i][j]*2;
+				score = score + board[i][j] + board[i][j];
+				print_number(score2, BLACK);
+				print_number(score, WHITE);
+				score2=scores;
+				board[i][j] = 0;
+			}
+		}
+	}
+
+	for(int i=0; i<4; i++){
+		for(int j=0; j<3; j++){
+			if(board[i][j+1] == 0){
+				board[i][j+1] = board[i][j];
+				board[i][j] = 0;
+			}
+		}
+	}
+
+	drawBoard();
+	drawVals();
+	
+	int initRow;
+	int initCol;
+
+	do{
+		initRow = rand() % 4;
+		initCol = rand() % 4;
+	}while(board[initRow][initCol] != 0);
+
+	board[initRow][initCol] = 2;
+	write_text("2", initRow*30, initCol*30, RED, 0); 
+}
+
+void up(){
+	for(int i=3; i>=0; i--){
+		for(int j=3; j>0; j--){
+			if(board[i][j-1] == 0){
+				board[i][j-1] = board[i][j];
+				board[i][j] = 0;
+			}
+			else if(board[i][j] == board[i][j-1]){
+				board[i][j-1] = board[i][j]*2;
+				score = score + board[i][j] + board[i][j];
+				print_number(score2, BLACK);
+				print_number(score, WHITE);
+				score2=score;
+				board[i][j] = 0;
+			}
+		}
+	}
+
+	for(int i=3; i>=0; i--){
+		for(int j=3; j>0; j--){
+			if(board[i][j-1] == 0){
+				board[i][j-1] = board[i][j];
+				board[i][j] = 0;
+			}
+		}
+	}
+	
+
+	drawBoard();
+	drawVals();
+	
+	int initRow;
+	int initCol;
+
+	do{
+		initRow = rand() % 4;
+		initCol = rand() % 4;
+	}while(board[initRow][initCol] != 0);
+
+	board[initRow][initCol] = 2;
+	write_text("2", initRow*30, initCol*30, RED, 0); 
+}
+
+void right(){
+	for(int i=3; i>0; i--){
+		for(int j=0; j<=3; j++){
+			if(board[i-1][j] != 0 && board[i][j] == 0){
+				board[i][j] = board[i-1][j];
+				board[i-1][j] = 0;
+			}
+			else if(board[i][j] == board[i-1][j]){
+				board[i][j] = board[i][j]*2;
+				board[i-1][j] = 0;
+			}
+		}
+	}
+
+	/*for(int i=0; i<3; i++){
+		for(int j=0; j<=3; j++){
+			if(board[i+1][j] == 0){
+				board[i+1][j] = board[i][j];
+				board[i][j] = 0;
+			}
+		}
+	}*/
+
+	drawBoard();
+	drawVals();
+	
+	int initRow;
+	int initCol;
+
+	do{
+		initRow = rand() % 4;
+		initCol = rand() % 4;
+	}while(board[initRow][initCol] != 0);
+
+	board[initRow][initCol] = 2;
+	write_text("2", initRow*30, initCol*30, RED, 0); 
+}
+
+void left(){
+	for(int i=0; i<3; i++){
+		for(int j=0; j<=3; j++){
+			if(board[i+1][j] != 0 && board[i][j] == 0){
+				board[i][j] = board[i+1][j];
+				board[i+1][j] = 0;
+			}
+			else if(board[i][j] == board[i+1][j]){
+				board[i][j] = board[i][j]*2;
+				board[i+1][j] = 0;
+			}
+		}
+	}
+
+	/*for(int i=3; i>0; i--){
+		for(int j=3; j>=0; j--){
+			if(board[i-1][j] == 0){
+				board[i-1][j] = board[i][j];
+				board[i][j] = 0;
+			}
+		}
+	}*/
+
+	drawBoard();
+	drawVals();
+	
+	int initRow;
+	int initCol;
+
+	do{
+		initRow = rand() % 4;
+		initCol = rand() % 4;
+	}while(board[initRow][initCol] != 0);
+
+	board[initRow][initCol] = 2;
+	write_text("2", initRow*30, initCol*30, RED, 0); 
+}
+
+
+void drawVals(){
+	for(int i=0; i<4; i++){
+		for(int j=0; j<4; j++){
+			int aInt = board[i][j];
+			if(aInt !=0){
+				char str[15];
+				sprintf(str, "%d", aInt);
+				if(aInt ==2)		write_text(str, i*30, j*30, RED, 0); 
+				else if(aInt ==4)	write_text(str, i*30, j*30, BLUE, 0); 
+				else if(aInt ==8)	write_text(str, i*30, j*30, YELLOW, 0); 
+				else if(aInt ==16)	write_text(str, i*30, j*30, GREEN, 0); 
+				else				write_text(str, i*30, j*30, BLACK, 0); 
+			}
+		}
+	}
+}
+
+
+void drawBox(int rowCount, int colCount){
+
+	for(int x=0; x<4; x++){
+		for(int y=0; y<4; y++){
+			for(int j=rowCount; j<rowCount+25; j++){
+				for (int i=colCount;i<colCount+25;i++)
+					write_pixel(x+i, y+j, WHITE);
+			}
+		}
+	}
+}
+
+void drawBoard(){
+	int a=0; int b=0;
+	for(int rowCount=0; rowCount<120; rowCount+=30){
+		for(int colCount=0; colCount<120; colCount+=30){
+			drawBox(rowCount, colCount);
+		}
+	}
+}
+
+void randomizer(){
+	int initBox = rand() % 2+2;
+
+	for(int i=0; i<initBox; i++){
+		int initRow = rand() % 4;
+		int initCol = rand() % 4;
+
+		board[initRow][initCol] = 2;
+
+   		write_text("2", initRow*30, initCol*30, BLACK, 0); 
+	}
+
+}
+
+void erase(int x, int y, int w, int h){ //basically covers an area with a black rectangle 
+   int i,j;
+   for (i=y;i<=(y+h);i++)
+      for (j=x;j<=(x+w);j++)
+         write_pixel(j,i,100);
+}
+
+/*void showScore(){
+	write_text(&score, 70, 160, WHITE, 0);
+}*/
+
+void showHome(){
+	int i;
+	for (i=11;i<185;i++) write_pixel(15, i, WHITE);
+	for (i=11;i<185;i++) write_pixel(300, i, WHITE);
+	for (i=15;i<300;i++) write_pixel(i, 11, WHITE);
+	for (i=15;i<300;i++) write_pixel(i, 185, WHITE);
+	write_text("2048", 140, 50, WHITE, 0);
+	write_text("Press 1 to start!", 80, 150, WHITE, 0);
+}
+
+void print_number(int score, char color){
+	char str[10];
+   	sprintf(str,"%d",score);
+   	write_text(str,70,160,color,0);
+   	getch();
+}
